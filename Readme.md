@@ -23,7 +23,7 @@ Also supports reversal of the filename adjustments.
 
 **verbose** Sets the verbosity **LEVEL** **1**=verbose **0**=basic
 
-**nockeck** Skips the sanity check**
+**nockeck** Skips the sanity check
 
 ## Disclaimer
 This program is free software. It comes without any warranty.
@@ -56,11 +56,11 @@ Randomize filenames and order of .csv files recursively.
 
 ## Building an Executable (Windows)
 
-* *run-app.ps1* * Can generate a single-file executable version of this program.
+*run-app.ps1* Can generate a single-file executable version of this program.
 
 `./run-app.ps1 BuildExe`
 
-The generated executable can be found in `/dist`.
+The generated executable can be found in `/dist`
 
 This requires **pyinstaller** `pip install pyinstaller`
 
@@ -75,7 +75,7 @@ Run Pylint `./run-app.ps1 Lint`
 Clean junk `./run-app.ps1 Clean`
 
 ## .rmanidest Files
-When randomizing filenames the changes will be tracked in a * *.rmanifest* * file.
+When randomizing filenames the changes will be tracked in a *.rmanifest* file.
 
 Do not modify or delete this file if you want to reverse the randomization in the future.
 
