@@ -77,7 +77,7 @@ Clean junk `./run-app.ps1 Clean`
 ## .rmanidest Files
 When randomizing filenames the changes will be tracked in a *.rmanifest* file.
 
-Do not modify or delete this file if you want to reverse the randomization in the future.
+Do not modify or delete these files. They are necessary for `-undo`-ing any filename changes.
 
 ## Future Improvements
 - Successive renamings via `-order` should remove the previous prefix so the filename does not grow indefinitely.
