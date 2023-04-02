@@ -31,4 +31,6 @@ def get_parser():
             + " or randomizing filenames.")
     parser.add_argument("-verbose", "-v", type=int, default=1,
         help="Sets the verbosity in the console.")
+    parser.add_argument("-nocheck", "-nc", action="store_true", default=False,
+        help="Skips the sanity check")
     return parser

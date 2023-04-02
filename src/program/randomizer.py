@@ -42,7 +42,7 @@ class Randomizer:
                     continue
                 try:
                     os.rename(full_path_old, full_path_new)
-                    program.console.Console.display(f"\"{full_path_old}\" → \"{full_path_new}\"")
+                    program.console.Console.display(f"R \"{full_path_old}\" → \"{full_path_new}\"")
                     scope.add_change(file, new_name)
                 except (FileExistsError, NotADirectoryError, IsADirectoryError, OSError) as error:
                     program.console.Console.error( \

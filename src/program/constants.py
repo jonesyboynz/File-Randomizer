@@ -2,4 +2,4 @@
 Program constants
 """
 
-LOG_FILENAME=".rmanifestlog"
+LOG_FILENAME=".rmanifest"

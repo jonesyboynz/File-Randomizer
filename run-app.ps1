@@ -5,7 +5,7 @@
 Param
 (
     [Parameter(position=0)]
-    [ValidateSet("Clean","All","Build","UnitTest","Lint","BuildTestData","FunctionalTest")]
+    [ValidateSet("Clean","All","BuildExe","UnitTest","Lint","BuildTestData","FunctionalTest","Test")]
     [String]
     $Action="All"
 )
@@ -18,6 +18,23 @@ Function Clean {
 
     # Delete all logs
     Get-ChildItem *.log -Recurse | foreach { Remove-Item -Path $_.FullName -Verbose }
+
+    # Delete all spec files
+    Get-ChildItem *.spec -Recurse | foreach { Remove-Item -Path $_.FullName -Verbose }
+
+    # Delete compilation files
+    if(Test-Path -Path "build"){
+      Remove-Item "build" -Recurse -Verbose
+    }
+
+    if(Test-Path -Path "dist"){
+      Remove-Item "dist" -Recurse -Verbose
+    }
+
+    # Delete test data
+    if(Test-Path -Path "test_data"){
+      Remove-Item "test_data" -Recurse -Verbose
+    }
 }
 
 Function UnitTest {
@@ -39,7 +56,7 @@ Function BuildTestData {
     [IO.File]::WriteAllLines("$($pwd)/test_data/file1.txt", "Test data")
     [IO.File]::WriteAllLines("$($pwd)/test_data/file2.csv", "Test data")
     [IO.File]::WriteAllLines("$($pwd)/test_data/file10.altered", "Test data")
-    [IO.File]::WriteAllLines("$($pwd)/test_data/.rmanifestlog", "file10.altered|file10.txt")
+    [IO.File]::WriteAllLines("$($pwd)/test_data/.rmanifest", "file10.altered|file10.txt")
 
     New-Item -Path "test_data/path1" -ItemType Directory
     [IO.File]::WriteAllLines("$($pwd)/test_data/path1/file3.txt", "Test data")
@@ -53,6 +70,16 @@ Function BuildTestData {
     New-Item -Path "test_data/path3" -ItemType Directory
     [IO.File]::WriteAllLines("$($pwd)/test_data/path3/file8.txt", "Test data")
     [IO.File]::WriteAllLines("$($pwd)/test_data/path3/file9.data", "Test data")
+
+    New-Item -Path "test_data/order" -ItemType Directory
+    [IO.File]::WriteAllLines("$($pwd)/test_data/order/a.txt", "Test data")
+    [IO.File]::WriteAllLines("$($pwd)/test_data/order/b.txt", "Test data")
+    [IO.File]::WriteAllLines("$($pwd)/test_data/order/c.txt", "Test data")
+    [IO.File]::WriteAllLines("$($pwd)/test_data/order/d.txt", "Test data")
+    [IO.File]::WriteAllLines("$($pwd)/test_data/order/e.txt", "Test data")
+    [IO.File]::WriteAllLines("$($pwd)/test_data/order/f.txt", "Test data")
+    [IO.File]::WriteAllLines("$($pwd)/test_data/order/g.txt", "Test data")
+    [IO.File]::WriteAllLines("$($pwd)/test_data/order/not-me.csv", "Test data")
 }
 
 Function FunctionalTest {
@@ -64,16 +91,25 @@ Function FunctionalTest {
     Write-Host "Test 2 - Pick 1 .csv" -b magenta -f white
     python .\src\file_randomizer.py .\test_data\ -pick 1 -r -re ".*csv"
 
-    Write-Host "Test 3 - Pick 100 from path3" -b magenta -f white
+    Write-Host "Test 3 - Pick 100 from \test_data\path3" -b magenta -f white
     python .\src\file_randomizer.py .\test_data\path3 -pick 100
 
-    Write-Host "Test 4 - Randomize test_data" -b magenta -f white
+    Write-Host "Test 4 - Pick 1 absolute" -b magenta -f white
+    python .\src\file_randomizer.py "$($pwd)\test_data\path3\" -pick 1 -r
+
+    Write-Host "Test 5 - Randomize test_data" -b magenta -f white
     python .\src\file_randomizer.py .\test_data\ -name -order
 
-    Write-Host "Test 5 - Undo test_data" -b magenta -f white
-    Write-Host "todo"
+    Write-Host "Test 6 - Randomize \test_data\path3" -b magenta -f white
+    python .\src\file_randomizer.py .\test_data\path3 -name -order
 
-    Write-Host "Test 6 - Do nothing" -b magenta -f white
+    Write-Host "Test 7 - Randomize order \test_data\order" -b magenta -f white
+    python .\src\file_randomizer.py .\test_data\order -order -re ".+\.txt"
+
+    Write-Host "Test 8 - Undo \test_data\path3" -b magenta -f white
+    python .\src\file_randomizer.py .\test_data\path3 -undo
+
+    Write-Host "Test 9 - Do nothing" -b magenta -f white
     python .\src\file_randomizer.py .\test_data\
 }
 
@@ -83,10 +119,12 @@ Function Lint {
   pylint .\src
 }
 
-Function Build {
-  Write-Host "Build" -b darkgreen -f white
+Function BuildExe {
+  Write-Host "BuildExe" -b darkgreen -f white
 
-  pyinstaller --onefile src/file_randomizer.py
+  $version = Get-Content .\version.txt -First 1
+
+  pyinstaller --onefile src/file_randomizer.py -n "file-randomizer-$($version).exe"
 }
 
 
@@ -100,6 +138,12 @@ Switch($Action)
     "Clean"
     {
         Clean
+    }
+    "Test"{
+      BuildTestData
+      UnitTest
+      BuildTestData
+      FunctionalTest
     }
     "UnitTest"
     {
@@ -118,9 +162,9 @@ Switch($Action)
     {
         Lint
     }
-    "Build"
+    "BuildExe"
     {
-        Build
+        BuildExe
     }
     "All"
     {
@@ -129,6 +173,6 @@ Switch($Action)
         UnitTest
         BuildTestData
         FunctionalTest
-        Build
+        BuildExe
     }
 }

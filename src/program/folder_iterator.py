@@ -49,7 +49,7 @@ class FolderIterator:
         for item in os.listdir(path):
             object_path = os.path.join(path, item)
             if os.path.isdir(object_path):
-                folders += self.__get_folders_recurse( object_path)
+                folders += self.__get_folders_recurse(object_path)
         return folders
 
     def __get_files(self, path):
@@ -81,8 +81,7 @@ class FolderSpecification:
     def __len__(self):
         return len(self.files)
 
-    def __repr__(self):
-        # for debugging
+    def __repr__(self): # for debugging
         return f"FolderSpecification: {self.directory}\n{self.files}\n{self.log}"
 
     def has_log(self):
