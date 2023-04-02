@@ -15,7 +15,7 @@ class FolderIterator:
     def __init__(self, directory, recursive, regex):
         self.__directory = directory
         self.__recursive = recursive
-        self.__regex = re.compile(regex) if regex is not None else None
+        self.__regex = re.compile(regex, re.IGNORECASE) if regex is not None else None
         self.__folders = []
         self.__at_end = False
 
