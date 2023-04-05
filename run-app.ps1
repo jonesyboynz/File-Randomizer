@@ -80,6 +80,11 @@ Function BuildTestData {
     [IO.File]::WriteAllLines("$($pwd)/test_data/order/f.txt", "Test data")
     [IO.File]::WriteAllLines("$($pwd)/test_data/order/g.txt", "Test data")
     [IO.File]::WriteAllLines("$($pwd)/test_data/order/not-me.csv", "Test data")
+
+    New-Item -Path "test_data/order-twice" -ItemType Directory
+    [IO.File]::WriteAllLines("$($pwd)/test_data/order-twice/x.data", "Test data")
+    [IO.File]::WriteAllLines("$($pwd)/test_data/order-twice/y.data", "Test data")
+    [IO.File]::WriteAllLines("$($pwd)/test_data/order-twice/z.data", "Test data")
 }
 
 Function FunctionalTest {
@@ -111,6 +116,11 @@ Function FunctionalTest {
 
     Write-Host "Test 9 - Do nothing" -b magenta -f white
     python .\src\file_randomizer.py .\test_data\
+
+    Write-Host "Test 10 - Randomize order twice and pick" -b magenta -f white
+    Write-Host "This test can have soft errors" -b magenta -f white
+    python .\src\file_randomizer.py .\test_data\order-twice\ -order
+    python .\src\file_randomizer.py .\test_data\order-twice\ -order -pick 1
 }
 
 Function Lint {

@@ -32,7 +32,8 @@ class Randomizer:
         order_prefixes = self.generate_file_order_prefixes(specification.files)
         with program.randomize_log_scope.RandomizationLogScope(specification.directory) as scope:
             for file in specification.files:
-                new_name = self.generate_name(file, order_prefixes[file])
+                original_name = scope[file] if file in scope else file
+                new_name = self.generate_name(original_name, order_prefixes[file])
                 full_path_old = os.path.join(specification.directory, file)
                 full_path_new = os.path.join(specification.directory, new_name)
                 if os.path.exists(full_path_new):
@@ -43,7 +44,9 @@ class Randomizer:
                 try:
                     os.rename(full_path_old, full_path_new)
                     program.console.Console.display(f"R \"{full_path_old}\" → \"{full_path_new}\"")
-                    scope.add_change(file, new_name)
+                    if file in scope:
+                        scope.remove_change(file)
+                    scope.add_change(original_name, new_name)
                 except (FileExistsError, NotADirectoryError, IsADirectoryError, OSError) as error:
                     program.console.Console.error( \
                         f"Rename failed: \"{full_path_old}\" → \"{full_path_new}\"")

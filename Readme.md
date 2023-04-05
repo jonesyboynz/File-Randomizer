@@ -25,13 +25,6 @@ Also supports reversal of the filename adjustments.
 
 **nockeck** Skips the sanity check
 
-## Disclaimer
-This program is free software. It comes without any warranty.
-
-Misuse, whether intention or accidental, can cause corruption of system files or loss of data.
-
-By using this software you accept full responsibility for the outcome of its use.
-
 ## Example Usage
 
 Randomize filenames.
@@ -74,11 +67,17 @@ Run Pylint `./run-app.ps1 Lint`
 
 Clean junk `./run-app.ps1 Clean`
 
-## .rmanidest Files
+## .rmanifest Files
 When randomizing filenames the changes will be tracked in a *.rmanifest* file.
 
-Do not modify or delete these files. They are necessary for `-undo`-ing any filename changes.
+Do not modify or delete these files. They are necessary for `-undo`-ing filename changes.
+
+## Disclaimer
+This program is free software. It comes without any warranty.
+
+Misuse, whether intention or accidental, can cause corruption of system files or loss of data.
+
+By using this software you accept full responsibility for the outcome of its use.
 
 ## Future Improvements
-- Successive renamings via `-order` should remove the previous prefix so the filename does not grow indefinitely.
 - Better sanity check

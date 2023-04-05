@@ -43,7 +43,7 @@ class FolderIteratorTests(unittest.TestCase):
         for specification in under_test:
             all_files += specification.files
             count += 1
-        self.assertEqual(5, count)
+        self.assertEqual(6, count)
         self.assertEqual(12, len(all_files))
         self.assertIn("file1.txt", all_files)
         self.assertIn("file3.txt", all_files)

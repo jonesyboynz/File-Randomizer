@@ -17,18 +17,13 @@ class FolderIterator:
         self.__recursive = recursive
         self.__regex = re.compile(regex, re.IGNORECASE) if regex is not None else None
         self.__folders = []
-        self.__at_end = False
 
     def __iter__(self):
+        self.__get_folders()
         return self
 
     def __next__(self):
-        if len(self.__folders) == 0 and not self.__at_end:
-            self.__get_folders()
-        if len(self.__folders) == 1:
-            self.__at_end = True
         if len(self.__folders) == 0:
-            self.__at_end = False
             raise StopIteration
         return self.__get_files(self.__folders.pop(0))
 
