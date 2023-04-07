@@ -31,10 +31,10 @@ class Picker:
         """
         Picks a number of random files
         """
-        program.console.Console.display_optional("Picking files!")
+        program.console.Console.display_optional(f"Picking {count} file(s)!")
         if len(all_files) < count:
             program.console.Console.display_optional( \
-                f"Fewer files than pick count - pick {count} from {len(all_files)}")
+                f"Fewer files than pick number - pick {count} from {len(all_files)}")
         files = all_files.copy()
         for i in range(0, count):
             if len(files) == 0:
@@ -42,6 +42,6 @@ class Picker:
             index = random.randint(0, len(files) - 1)
             picked = files.pop(index)
             if program.console.Console.VERBOSE:
-                program.console.Console.display(f"{i + 1} - \"{picked}\"")
+                program.console.Console.display(f"P {i + 1} - \"{picked}\"")
             else:
                 program.console.Console.display(f"{picked}")
