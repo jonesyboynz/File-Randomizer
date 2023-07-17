@@ -62,7 +62,7 @@ class Randomizer:
         else:
             random.shuffle(files)
             i = 0
-            fill = int(math.log(len(files), 10))
+            fill = int(math.log(len(files), 10)) + 1
             for file in files:
                 orders[file] = str(i).zfill(fill)
                 i += 1

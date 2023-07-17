@@ -10,6 +10,7 @@ import program.console
 from program.randomizer import Randomizer
 from program.picker import Picker
 from program.undoer import Undoer
+from program.sanity_check import sanity_check
 
 def run():
     """
@@ -43,7 +44,12 @@ def validate_folder_exists(directory):
     Validates the target directory exists
     """
     if not os.path.isdir(directory):
-        program.console.Console.error(f"\"{directory}\" does not exist")
+        if re.match(""".+" -(o|O|u|U|n|N|p|P)$""", directory):
+            program.console.Console.error((f"\"{directory}\" does not exist."
+                "\n\t- This may be caused by python improperly parsing the command line argumets."
+                "\n\t- Try removing the trailing \\ from the directory."))
+        else:
+            program.console.Console.error(f"\"{directory}\" does not exist")
         sys.exit(1)
 
 def validate_regex(regex):
@@ -57,32 +63,6 @@ def validate_regex(regex):
     except re.error:
         program.console.Console.error(f"Invalid regex \"{regex}\"")
         sys.exit(1)
-
-def sanity_check(args):
-    """
-    Sanity checks the directory chosen by the user directory
-    """
-    if args.nocheck or (not args.name and not args.order and not args.undo):
-        return #Check can be skipped if the action will not modify any files
-    directory = args.directory.lower()
-    cwd = os.getcwd().lower()
-    if any(["windows" in directory, "users" in directory, "system32" in directory,
-        "drivers" in directory, "Recovery" in directory, directory == "/", directory == "/.",
-        cwd == "c:/", cwd == "root/", len(cwd) < 15]) \
-        or (directory.startswith("c:/") and len(directory) < 15) \
-        or directory.endswith("appdata/roaming") \
-        or directory.startswith("/root"):
-        answer = input("Warning: you may be about to perform a dangerous"
-             + " operation in a system directory."
-             + "\nThis may break permenantly break your computer."
-             + " Please carefully examine the paths below."
-             + f"\nWorking directory: \"{os.getcwd()}\""
-             + f"\nTarget directory: \"{args.directory}\""
-             + "\n\nIf you are sure you want to proceed then enter: thatsok"
-             + "\n> ")
-        if answer != "thatsok":
-            program.console.Console.error("Exiting on sanity check")
-            sys.exit(1)
 
 if __name__ == "__main__":
     run()
