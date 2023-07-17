@@ -44,12 +44,13 @@ def validate_folder_exists(directory):
     Validates the target directory exists
     """
     if not os.path.isdir(directory):
-        if re.match(""".+" -(o|O|u|U|n|N|p|P)$""", directory):
-            program.console.Console.error((f"\"{directory}\" does not exist."
+        if re.match(""".+"( -(o|order|u|undo|n|name|p|pick|)| [0-9]+)+$""", \
+            directory, re.IGNORECASE):
+            program.console.Console.error((f"The directory \"{directory}\" does not exist."
                 "\n\t- This may be caused by python improperly parsing the command line argumets."
                 "\n\t- Try removing the trailing \\ from the directory."))
         else:
-            program.console.Console.error(f"\"{directory}\" does not exist")
+            program.console.Console.error(f"The directory \"{directory}\" does not exist")
         sys.exit(1)
 
 def validate_regex(regex):
